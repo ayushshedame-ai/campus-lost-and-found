@@ -1,0 +1,14 @@
+# type|id|name|description|category|location|date|status|matchedWith|personName|studentId|phone|email|storedAt
+LOST|L001|Black Leather Wallet|Contains college ID card and some cash|ACCESSORIES|Library|2026-10-17|CLAIMED|F001|Rahul Sharma|S1001|9876543210|rahul@example.com|
+LOST|L002|Samsung Galaxy Earbuds|White charging case with a small scratch|ELECTRONICS|Canteen|2026-10-18|OPEN||Priya Patil|S1002|9123456780|priya@example.com|
+LOST|L003|Engineering Mathematics Textbook|Blue cover, name written on first page|BOOKS|Block B Classroom 204|2026-10-15|OPEN||Amit Kulkarni|S1003|9988776655|amit@example.com|
+LOST|L004|Black Leather Wallet|Contains college ID card and some cash|ACCESSORIES|Library|2026-10-17|OPEN||Rahul Sharma|S1001|9876543210|rahul@example.com|
+LOST|L005|Samsung Galaxy Earbuds|White charging case with a small scratch|ELECTRONICS|Canteen|2026-10-18|OPEN||Priya Patil|S1002|9123456780|priya@example.com|
+LOST|L006|Engineering Mathematics Textbook|Blue cover, name written on first page|BOOKS|Block B Classroom 204|2026-10-15|OPEN||Amit Kulkarni|S1003|9988776655|amit@example.com|
+LOST|L007|wallet|brown colour wallet with  500 rupees|ACCESSORIES|building A first floor|2026-10-20|OPEN||rahul|45612|8596365214|rg@gmail.com|
+FOUND|F001|Black Wallet|Leather wallet with an ID card inside|ACCESSORIES|Library Entrance|2026-10-18|CLAIMED|L001|Neha Joshi|S2001|9090909090|neha@example.com|Security Office
+FOUND|F002|Wireless Earbuds|Samsung earbuds in a white case|ELECTRONICS|Canteen|2026-10-19|OPEN||Campus Security|SEC001|9000000001|security@example.com|Security Office
+FOUND|F003|Blue Water Bottle|Steel bottle with a sticker|OTHER|Playground|2026-10-19|OPEN||Campus Security|SEC001|9000000001|security@example.com|Sports Office
+FOUND|F004|Black Wallet|Leather wallet with an ID card inside|ACCESSORIES|Library Entrance|2026-10-18|OPEN||Neha Joshi|S2001|9090909090|neha@example.com|Security Office
+FOUND|F005|Wireless Earbuds|Samsung earbuds in a white case|ELECTRONICS|Canteen|2026-10-19|OPEN||Campus Security|SEC001|9000000001|security@example.com|Security Office
+FOUND|F006|Blue Water Bottle|Steel bottle with a sticker|OTHER|Playground|2026-10-19|OPEN||Campus Security|SEC001|9000000001|security@example.com|Sports Office

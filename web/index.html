@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Lost & Found Management System</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <span class="brand-icon">🎓</span>
+        <div class="brand-text">
+          <h1>Campus Lost &amp; Found</h1>
+          <span class="subtitle">Student Full-Stack Portal</span>
+        </div>
+      </div>
+      
+      <div class="nav-actions">
+        <div class="server-badge" id="serverStatus">
+          <span class="status-dot"></span>
+          <span class="status-text">Backend Connected</span>
+        </div>
+        <button class="btn btn-secondary btn-sm" id="btnLoadDemo" title="Populate sample lost & found reports">
+          ⚡ Load Sample Data
+        </button>
+        <button class="btn btn-outline btn-sm" id="btnExportReport" title="Export text report to file">
+          📄 Export Report
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-content">
+    
+    <!-- Hero / Stats Dashboard -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon lost-icon">🔍</div>
+        <div class="stat-info">
+          <span class="stat-label">Total Lost Reports</span>
+          <h2 class="stat-value" id="statTotalLost">0</h2>
+          <span class="stat-sub" id="statOpenLost">0 Open reports</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon found-icon">🎁</div>
+        <div class="stat-info">
+          <span class="stat-label">Total Found Reports</span>
+          <h2 class="stat-value" id="statTotalFound">0</h2>
+          <span class="stat-sub" id="statOpenFound">0 Open reports</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon match-icon">⚡</div>
+        <div class="stat-info">
+          <span class="stat-label">Matched Items</span>
+          <h2 class="stat-value" id="statMatched">0</h2>
+          <span class="stat-sub">Awaiting pickup</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon claimed-icon">✅</div>
+        <div class="stat-info">
+          <span class="stat-label">Claimed &amp; Returned</span>
+          <h2 class="stat-value" id="statClaimed">0</h2>
+          <span class="stat-sub">Successfully resolved</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <nav class="tabs-nav">
+      <button class="tab-btn active" data-tab="browseTab">
+        📋 Browse Items
+      </button>
+      <button class="tab-btn" data-tab="reportLostTab">
+        🔍 Report Lost Item
+      </button>
+      <button class="tab-btn" data-tab="reportFoundTab">
+        🎁 Report Found Item
+      </button>
+      <button class="tab-btn" data-tab="matchFinderTab">
+        ⚡ Smart Match Finder
+      </button>
+      <button class="tab-btn" data-tab="claimDeskTab">
+        🤝 Claim &amp; Return Desk
+      </button>
+    </nav>
+
+    <!-- TAB 1: Browse Items -->
+    <section id="browseTab" class="tab-panel active">
+      <!-- Search & Filters -->
+      <div class="filters-bar">
+        <div class="search-box">
+          <span class="search-icon">🔎</span>
+          <input type="text" id="searchInput" placeholder="Search by name, description, location, or student..." />
+          <button id="searchClearBtn" class="clear-btn" style="display:none;">&times;</button>
+        </div>
+
+        <div class="filter-controls">
+          <div class="filter-group">
+            <label for="filterType">Type:</label>
+            <select id="filterType">
+              <option value="ALL">All Reports</option>
+              <option value="LOST">Lost Items</option>
+              <option value="FOUND">Found Items</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="filterCategory">Category:</label>
+            <select id="filterCategory">
+              <option value="ALL">All Categories</option>
+              <option value="ELECTRONICS">Electronics</option>
+              <option value="DOCUMENTS">Documents</option>
+              <option value="ACCESSORIES">Accessories</option>
+              <option value="BOOKS">Books</option>
+              <option value="CLOTHING">Clothing</option>
+              <option value="KEYS">Keys</option>
+              <option value="BAGS">Bags</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="filterStatus">Status:</label>
+            <select id="filterStatus">
+              <option value="ALL">All Statuses</option>
+              <option value="OPEN">Open</option>
+              <option value="MATCHED">Matched</option>
+              <option value="CLAIMED">Claimed</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Items Grid -->
+      <div class="items-header">
+        <span id="itemsCountText">Loading campus items...</span>
+        <button class="btn btn-ghost btn-sm" id="btnRefreshItems">🔄 Refresh</button>
+      </div>
+
+      <div class="items-grid" id="itemsContainer">
+        <!-- Rendered via JavaScript -->
+      </div>
+    </section>
+
+    <!-- TAB 2: Report Lost Item -->
+    <section id="reportLostTab" class="tab-panel">
+      <div class="form-container">
+        <div class="form-header">
+          <h2>Report a Lost Item</h2>
+          <p>Fill in details to record what you lost. Our algorithm will automatically compare it with found items on campus.</p>
+        </div>
+
+        <form id="lostForm" class="styled-form">
+          <div class="form-section-title">📦 Item Details</div>
+          <div class="form-row">
+            <div class="form-group col-8">
+              <label for="lostName">Item Name <span class="required">*</span></label>
+              <input type="text" id="lostName" placeholder="e.g. Black Leather Wallet, Casio Calculator" required />
+            </div>
+            <div class="form-group col-4">
+              <label for="lostCategory">Category <span class="required">*</span></label>
+              <select id="lostCategory" required>
+                <option value="ELECTRONICS">Electronics</option>
+                <option value="DOCUMENTS">Documents</option>
+                <option value="ACCESSORIES" selected>Accessories</option>
+                <option value="BOOKS">Books</option>
+                <option value="CLOTHING">Clothing</option>
+                <option value="KEYS">Keys</option>
+                <option value="BAGS">Bags</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-6">
+              <label for="lostLocation">Lost Location <span class="required">*</span></label>
+              <input type="text" id="lostLocation" placeholder="e.g. Central Library, Cafeteria Table 4" required />
+            </div>
+            <div class="form-group col-6">
+              <label for="lostDate">Date Lost <span class="required">*</span></label>
+              <input type="date" id="lostDate" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="lostDescription">Description <span class="required">*</span></label>
+            <textarea id="lostDescription" rows="3" placeholder="Provide distinct features (brand, model, stickers, contents, scratches) to aid matching..." required></textarea>
+          </div>
+
+          <div class="form-section-title">👤 Owner Contact Information</div>
+          <div class="form-row">
+            <div class="form-group col-6">
+              <label for="lostPersonName">Your Full Name <span class="required">*</span></label>
+              <input type="text" id="lostPersonName" placeholder="e.g. Rahul Sharma" required />
+            </div>
+            <div class="form-group col-6">
+              <label for="lostStudentId">Student / Roll ID <span class="required">*</span></label>
+              <input type="text" id="lostStudentId" placeholder="e.g. S1001" required />
+              <small class="field-help">Required later during claim verification.</small>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-6">
+              <label for="lostPhone">Phone Number <span class="required">*</span></label>
+              <input type="tel" id="lostPhone" placeholder="e.g. 9876543210" required />
+            </div>
+            <div class="form-group col-6">
+              <label for="lostEmail">Email Address <span class="required">*</span></label>
+              <input type="email" id="lostEmail" placeholder="e.g. rahul@example.com" required />
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="btnSubmitLost">Submit Lost Report</button>
+            <button type="reset" class="btn btn-secondary">Clear Form</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 3: Report Found Item -->
+    <section id="reportFoundTab" class="tab-panel">
+      <div class="form-container">
+        <div class="form-header">
+          <h2>Report a Found Item</h2>
+          <p>Thank you for turning in a lost item! Please record where you found it and where it is safely stored.</p>
+        </div>
+
+        <form id="foundForm" class="styled-form">
+          <div class="form-section-title">🎁 Found Item Details</div>
+          <div class="form-row">
+            <div class="form-group col-8">
+              <label for="foundName">Item Name <span class="required">*</span></label>
+              <input type="text" id="foundName" placeholder="e.g. Wireless Bluetooth Earbuds, Blue Water Bottle" required />
+            </div>
+            <div class="form-group col-4">
+              <label for="foundCategory">Category <span class="required">*</span></label>
+              <select id="foundCategory" required>
+                <option value="ELECTRONICS">Electronics</option>
+                <option value="DOCUMENTS">Documents</option>
+                <option value="ACCESSORIES">Accessories</option>
+                <option value="BOOKS">Books</option>
+                <option value="CLOTHING">Clothing</option>
+                <option value="KEYS">Keys</option>
+                <option value="BAGS">Bags</option>
+                <option value="OTHER" selected>Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-4">
+              <label for="foundLocation">Found Location <span class="required">*</span></label>
+              <input type="text" id="foundLocation" placeholder="e.g. Library Entrance, Sports Complex" required />
+            </div>
+            <div class="form-group col-4">
+              <label for="foundDate">Date Found <span class="required">*</span></label>
+              <input type="date" id="foundDate" required />
+            </div>
+            <div class="form-group col-4">
+              <label for="foundStoredAt">Current Safe Storage <span class="required">*</span></label>
+              <input type="text" id="foundStoredAt" placeholder="e.g. Campus Security Office, Desk 3" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="foundDescription">Description <span class="required">*</span></label>
+            <textarea id="foundDescription" rows="3" placeholder="Condition, visual markings, colour, brand..." required></textarea>
+          </div>
+
+          <div class="form-section-title">🤝 Finder Contact Details</div>
+          <div class="form-row">
+            <div class="form-group col-6">
+              <label for="foundPersonName">Finder's Name <span class="required">*</span></label>
+              <input type="text" id="foundPersonName" placeholder="e.g. Neha Joshi / Campus Security" required />
+            </div>
+            <div class="form-group col-6">
+              <label for="foundStudentId">Student / Staff ID <span class="required">*</span></label>
+              <input type="text" id="foundStudentId" placeholder="e.g. S2001 or SEC001" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-6">
+              <label for="foundPhone">Phone Number <span class="required">*</span></label>
+              <input type="tel" id="foundPhone" placeholder="e.g. 9090909090" required />
+            </div>
+            <div class="form-group col-6">
+              <label for="foundEmail">Email Address <span class="required">*</span></label>
+              <input type="email" id="foundEmail" placeholder="e.g. neha@example.com" required />
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="btnSubmitFound">Submit Found Report</button>
+            <button type="reset" class="btn btn-secondary">Clear Form</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 4: Smart Match Finder -->
+    <section id="matchFinderTab" class="tab-panel">
+      <div class="match-tool-container">
+        <div class="form-header">
+          <h2>⚡ Smart Match Algorithm Engine</h2>
+          <p>Select any open report to compare against opposite items. The algorithm evaluates Category (30%), Keywords (40%), Location (15%), and Date Proximity (15%).</p>
+        </div>
+
+        <div class="match-selector-bar">
+          <label for="matchItemSelect">Select Item to Compare:</label>
+          <div class="match-select-wrapper">
+            <select id="matchItemSelect">
+              <option value="">-- Choose an open item --</option>
+            </select>
+            <button class="btn btn-primary" id="btnRunMatch">Compare Matches</button>
+          </div>
+        </div>
+
+        <div id="matchResultsArea" class="match-results-area">
+          <div class="empty-state">
+            <span class="empty-icon">💡</span>
+            <h3>No comparison active</h3>
+            <p>Pick a lost or found item from the dropdown above to view suggested matching pairs.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: Claim & Return Desk -->
+    <section id="claimDeskTab" class="tab-panel">
+      <div class="form-container">
+        <div class="form-header">
+          <h2>🤝 Item Claim &amp; Handover Desk</h2>
+          <p>When an item is matched, the student must provide the exact Student ID registered when reporting the lost item.</p>
+        </div>
+
+        <div class="claim-split-layout">
+          <div class="claim-form-box">
+            <form id="claimForm" class="styled-form">
+              <div class="form-group">
+                <label for="claimLostSelect">Select Matched Lost Item <span class="required">*</span></label>
+                <select id="claimLostSelect" required>
+                  <option value="">-- Choose a matched item --</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="claimStudentId">Verify Owner Student ID <span class="required">*</span></label>
+                <input type="text" id="claimStudentId" placeholder="e.g. S1001" required />
+                <small class="field-help">Must match the registered owner ID for this item.</small>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-success" id="btnSubmitClaim">Verify &amp; Return Item</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="claim-info-box">
+            <h3>Lifecycle Protocol:</h3>
+            <div class="lifecycle-steps">
+              <div class="step-card">
+                <div class="step-num">1</div>
+                <div>
+                  <strong>Reported (Open)</strong>
+                  <p>Item is posted as Lost or Found on the campus board.</p>
+                </div>
+              </div>
+              <div class="step-card">
+                <div class="step-num">2</div>
+                <div>
+                  <strong>Matched</strong>
+                  <p>Staff or student confirms compatibility via Smart Match Finder.</p>
+                </div>
+              </div>
+              <div class="step-card">
+                <div class="step-num">3</div>
+                <div>
+                  <strong>Claimed &amp; Closed</strong>
+                  <p>Owner shows student ID card at the security desk and retrieves item.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Item Details Modal -->
+  <div class="modal" id="detailsModal">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modalTitle">Item Details</h3>
+        <button class="modal-close" id="modalCloseBtn">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Rendered dynamically -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="modalCloseBtn2">Close</button>
+        <button class="btn btn-primary" id="modalMatchBtn">Find Matches for this Item</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

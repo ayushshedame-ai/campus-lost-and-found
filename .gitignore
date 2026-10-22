@@ -1,0 +1,19 @@
+# Compiled class files
+bin/
+*.class
+
+# Temporary and generated files
+*.tmp
+*.log
+data/*.tmp
+data/report.txt
+
+# Editor / IDE metadata
+.idea/
+*.iml
+.vscode/
+.settings/
+
+# OS generated files
+Thumbs.db
+.DS_Store
